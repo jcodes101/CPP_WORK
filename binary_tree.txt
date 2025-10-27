@@ -1,0 +1,279 @@
+🏃 3. Ways to walk through the tree
+
+The code has different “walk styles” to visit the boxes and print their numbers:
+
+🚶 Preorder
+
+Look at the box first, then left, then right
+👉 prints: root → left → right
+
+👀 Inorder
+
+Look at left first, then the box, then right
+👉 prints: left → root → right
+
+🌀 Postorder
+
+Look at left, then right, then the box
+👉 prints: left → right → root
+
+🚗 Level Order
+
+Look row by row, like reading a book line by line.
+It uses a queue — a line where boxes wait their turn.
+👉 prints: top → next line → next line...
+
+============================================================
+
+EXPLAINING FUNCTIONS:
+
+1.
+int count(node *r)
+{
+    if (!r)
+        return 0;
+    return count(r->left) + count(r->right) + 1;
+}
+
+DESC.
+    Example tree:
+
+        5
+       / \
+      6   7
+     / \
+    3   4
+
+Let's count how many nodes are in this tree using:
+
+int count(node *r)
+{
+    if (!r)
+        return 0;
+    return count(r->left) + count(r->right) + 1;
+}
+
+-------------------------------------------------
+Step-by-step:
+
+count(5)
+= count(6) + count(7) + 1
+
+count(6)
+= count(3) + count(4) + 1
+
+count(3)
+= count(NULL) + count(NULL) + 1
+= 0 + 0 + 1
+= 1
+
+count(4)
+= count(NULL) + count(NULL) + 1
+= 0 + 0 + 1
+= 1
+
+So count(6) = 1 (3) + 1 (4) + 1 (6 itself)
+             = 3
+
+Now count(7)
+= count(NULL) + count(NULL) + 1
+= 0 + 0 + 1
+= 1
+
+Finally, count(5) = 3 (left side) + 1 (right side) + 1 (itself)
+                  = 5
+
+-------------------------------------------------
+Total nodes in the tree = 5
+
+-------------------------------------------------
+Explanation:
+The +1 in the function means "count myself too".
+Each node adds 1 for itself, after asking its left and right sides
+how many boxes (nodes) they have.
+
+==========================================================================
+
+2.
+void levelorder(node *r)
+{
+    queue<node *> Q;
+    Q.push(r);
+    while (!Q.empty())
+    {
+        node *temp = Q.front();
+        Q.pop();
+        cout << temp->data << " ";
+        if (temp->left)
+            Q.push(temp->left);
+        if (temp->right)
+            Q.push(temp->right);
+    }
+    cout << endl;
+}
+
+Function: levelorder(node *r)
+
+Goal:
+Print all the nodes in the tree level by level — from top to bottom, left to right.
+This is called "level order traversal" or "breadth-first search".
+
+----------------------------------------------------------
+Code:
+void levelorder(node *r)
+{
+    queue<node *> Q;
+    Q.push(r);
+    while (!Q.empty())
+    {
+        node *temp = Q.front();
+        Q.pop();
+        cout << temp->data << " ";
+        if (temp->left)
+            Q.push(temp->left);
+        if (temp->right)
+            Q.push(temp->right);
+    }
+    cout << endl;
+}
+----------------------------------------------------------
+
+How it works (step-by-step):
+
+Example tree:
+        5
+       / \
+      6   7
+     / \
+    3   4
+
+Step 1: Start
+- Make an empty queue: Q = []
+- Push the root (5): Q = [5]
+
+Step 2: Take the first item from Q
+- temp = 5
+- Print 5
+- Add 5’s children (6 and 7) to Q
+- Q = [6, 7]
+Output: 5
+
+Step 3: Next node
+- temp = 6
+- Print 6
+- Add 6’s children (3 and 4) to Q
+- Q = [7, 3, 4]
+Output: 5 6
+
+Step 4: Next node
+- temp = 7
+- Print 7
+- 7 has no children
+- Q = [3, 4]
+Output: 5 6 7
+
+Step 5: Next node
+- temp = 3
+- Print 3
+- 3 has no children
+- Q = [4]
+Output: 5 6 7 3
+
+Step 6: Next node
+- temp = 4
+- Print 4
+- 4 has no children
+- Q = []
+Output: 5 6 7 3 4
+
+Step 7: Q is empty, stop.
+
+----------------------------------------------------------
+Final Output:
+5 6 7 3 4
+
+----------------------------------------------------------
+Summary:
+- The queue keeps track of which nodes to visit next.
+- Each time:
+  1. Take one node out.
+  2. Print its number.
+  3. Put its children at the end of the line.
+- This makes the function print the tree from top to bottom, left to right.
+
+++SMALLER VERSION++
+Make a line (Q) to keep track of boxes.
+Start by putting the big box (r) in line.
+While there are boxes in line:
+Take one from the front,
+Say its number out loud,
+Put its kids (left first, then right) at the end of the line.
+Stop when no boxes are left.
+
+===========================================================================
+
+3.
+void inorder(node *r)
+{
+    if (!r)
+        return;
+    inorder(r->left);        // inorder left sub tree
+    cout << r->data << endl; // inorder the root first
+    inorder(r->right);       // whole right sub tree is
+}
+
+EXPLANING VISUAL
+
+      5
+     / \
+    3   7
+   / \
+  2   4
+
+Start at 5 → go left → to 3
+
+At 3 → go left → to 2
+
+At 2 → left is NULL → print 2
+
+Back to 3 → print 3
+
+Go right → to 4 → print 4
+
+Back to 5 → print 5
+
+Go right → to 7 → print 7
+
+OUTPUT:
+    2
+    3
+    4
+    5
+    7
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

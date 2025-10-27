@@ -1,0 +1,91 @@
+Insertion Sort Notes
+====================
+
+How Insertion Sort Works:
+-------------------------
+- Think of sorting cards in your hand:
+  1. You pick up cards one by one from the deck (the array).
+  2. Each time, you insert the new card into the correct spot
+     among the cards you already hold, keeping them sorted.
+
+- In code:
+  - Start at index 1 (the 2nd element).
+  - Take the "current" value in hand.
+  - Compare it with the elements to the left.
+  - Shift any bigger elements to the right.
+  - Place the current value in the gap that’s left.
+
+Visual Example:
+---------------
+Array = [ 3, 15, 45, 9, 10 ]
+
+Step 1: i = 1, current = 15
+Compare with 3 → already in order.
+[ 3, 15 | 45, 9, 10 ]
+
+Step 2: i = 2, current = 45
+Compare with 15 → already in order.
+[ 3, 15, 45 | 9, 10 ]
+
+Step 3: i = 3, current = 9
+Compare with 45 → shift 45 right
+Compare with 15 → shift 15 right
+Compare with 3 → stop
+Insert 9
+[ 3, 9, 15, 45 | 10 ]
+
+Step 4: i = 4, current = 10
+Compare with 45 → shift 45 right
+Compare with 15 → shift 15 right
+Compare with 9 → stop
+Insert 10
+[ 3, 9, 10, 15, 45 ]
+
+Final Sorted Array:
+[ 3, 9, 10, 15, 45 ]
+
+Why Start at Index 1?
+---------------------
+- At i = 0, the "sorted part" of the array is just one element (arr[0]).
+- A single element is already sorted, so there is no work to do.
+- Starting at i = 1 makes sense because that is the first time we can compare
+  a "current" element with the already sorted part on the left.
+
+Analogy:
+--------
+- If you have only 1 card in your hand, it’s already in order.
+- When you pick up the 2nd card, that’s the first time you might have to insert it
+  into the correct position.
+- That’s why insertion sort begins at index 1.
+
+If you start at 0 anyway:
+-------------------------
+- The algorithm still works, but the first iteration is useless.
+- It grabs arr[0], looks left (nothing there), and puts it back in the same spot.
+- This wastes time but does not break the algorithm.
+
+Time Complexities of Insertion Sort:
+------------------------------------
+| Case        | Time Complexity |
+|-------------|-----------------|
+| Best Case   | O(n)            |
+| Average     | O(n^2)          |
+| Worst Case  | O(n^2)          |
+| Space       | O(1)            |
+
+Explanations:
+-------------
+- Best Case (O(n)):
+  If the array is already sorted, insertion sort only makes one comparison per element.
+  Runs in linear time.
+
+- Worst Case (O(n^2)):
+  If the array is completely reversed, every new element has to be compared and shifted
+  through the entire sorted section, making it quadratic.
+
+- Average Case (O(n^2)):
+  For random arrays, insertion sort generally requires shifting about half the sorted section
+  on each insertion, still leading to quadratic behavior.
+
+- Space Complexity (O(1)):
+  Insertion sort sorts in place, requiring only a constant amount of extra memory.

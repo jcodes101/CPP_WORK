@@ -1,0 +1,104 @@
+Bubble Sort Explanation
+=========================
+
+The line in question:
+---------------------
+for (int j = 0; j < size - i - 1; j++)
+
+Explanation of j < size - i - 1:
+--------------------------------
+- size = total number of items in the array
+- -i = which round of sorting we are on
+- -1 = because we always compare arr[j] with arr[j+1], so we stop one before the end
+
+Breaking it down:
+size → the total length of the array.
+
+- i → skip the last i elements (because they’re sorted already).
+
+- -1 → we stop one step earlier because we always compare arr[j] with arr[j+1].
+
+Why it shrinks each round:
+---------------------------
+After every round of bubble sort, the largest element is moved to the end. That part of the array is now "sorted." 
+So, in the next round, we don’t need to check the last element again. 
+That’s why the inner loop goes only up to (size - i - 1).
+
+Visual Walkthrough:
+-------------------
+Array = [3, 15, 45, 9, 10]
+
+Round 1 (i = 0):
+    j < 5 - 0 - 1 → j < 4 → j = 0,1,2,3
+    Comparisons: (3 vs 15), (15 vs 45), (45 vs 9), (45 vs 10)
+    Largest (45) bubbles to the end
+    Result: [3, 15, 9, 10, 45]
+
+Round 2 (i = 1):
+    j < 5 - 1 - 1 → j < 3 → j = 0,1,2
+    Comparisons: (3 vs 15), (15 vs 9), (15 vs 10)
+    Result: [3, 9, 10, 15, 45]
+
+Round 3 (i = 2):
+    j < 5 - 2 - 1 → j < 2 → j = 0,1
+    Comparisons: (3 vs 9), (9 vs 10)
+    Already sorted
+
+Round 4 (i = 3):
+    j < 5 - 3 - 1 → j < 1 → j = 0
+    Only one comparison (3 vs 9)
+
+Why a Nested Loop is Needed:
+----------------------------
+- Outer loop (i): Decides how many rounds we need. Each round puts one big number into its final position.
+- Inner loop (j): Does the actual comparing and swapping during that round.
+
+If we only had one loop:
+- We would only move the biggest number to the end once
+- The rest of the array would stay unsorted
+
+Analogy:
+--------
+Imagine lining up kids by height:
+- Inner loop = one round of comparing kids side by side, tallest moves to the back
+- Outer loop = repeating rounds until all kids are in order
+
+Or a basketball tournament:
+- Inner loop = matches in one round
+- Outer loop = tournament rounds until champion is found
+
+Summary:
+--------
+- Inner loop = does the comparing/swapping
+- Outer loop = makes sure we repeat until everything is sorted
+
+
+================================================================================================
+================================================================================================
+
+Bubble Sort Time Complexities
+===============================
+
+| Case        | Time Complexity |
+|-------------|-----------------|
+| Best Case   | O(n)            |
+| Average     | O(n^2)          |
+| Worst Case  | O(n^2)          |
+| Space       | O(1)            |
+
+Explanations:
+-------------
+- Best Case (O(n)):
+  If the array is already sorted, bubble sort only needs one pass to confirm. 
+  This works if we use a swap flag to detect no swaps happened.
+
+- Worst Case (O(n^2)):
+  If the array is completely reversed, bubble sort must do the maximum 
+  number of comparisons and swaps.
+
+- Average Case (O(n^2)):
+  For a randomly ordered array, about half of the elements are out of order. 
+  Bubble sort still needs nested loops, making it quadratic on average.
+
+- Space Complexity (O(1)):
+  Bubble sort only swaps elements in place, requiring no extra memory.

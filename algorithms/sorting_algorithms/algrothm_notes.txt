@@ -1,0 +1,342 @@
+ALGORITHMS OVERVIEW
+===================
+
+This document summarizes three major algorithm groups:
+- Sorting algorithms
+- Searching algorithms
+- Graph algorithms
+
+Each section lists common algorithms, short descriptions, time/space complexity, stability/in-place notes, typical use-cases, common pitfalls, and quick selection guidance.
+
+====================================================================
+SORTING ALGORITHMS
+====================================================================
+Purpose: reorder a collection into a defined order (commonly ascending). Key metrics: time complexity, space complexity, stability (preserve equal-key order), in-place property.
+
+1) Bubble Sort
+- Idea: repeatedly compare adjacent elements and swap if out of order; repeat passes until no swaps.
+- Time: Best O(n) (with early-exit optimization), Average/Worst O(n^2)
+- Space: O(1)
+- Stable: Yes
+- In-place: Yes
+- Use-case: Educational, tiny lists, nearly-sorted inputs (with optimization)
+- Pitfalls: Very slow on large lists.
+
+2) Selection Sort
+- Idea: repeatedly find the minimum element from unsorted portion and swap it to front.
+- Time: O(n^2) all cases
+- Space: O(1)
+- Stable: No (basic form)
+- In-place: Yes
+- Use-case: When memory writes are expensive (fewer swaps than some algorithms)
+
+3) Insertion Sort
+- Idea: grow sorted prefix; insert next item into correct place by shifting larger items right.
+- Time: Best O(n) (already sorted), Average/Worst O(n^2)
+- Space: O(1)
+- Stable: Yes
+- In-place: Yes
+- Use-case: Small arrays, nearly-sorted data; often used as the final step in hybrid sorts (e.g., for small partitions)
+
+4) Merge Sort
+- Idea: divide-and-conquer: split array in halves, recursively sort halves, merge sorted halves.
+- Time: O(n log n) all cases
+- Space: O(n) (extra array for merging)
+- Stable: Yes
+- In-place: Typically no (though in-place variants exist but are complex)
+- Use-case: Stable sort needs, predictable performance, external sorting (large data on disk)
+- Pitfalls: Extra memory usage; avoid naive midpoint integer overflow (use left + (right-left)/2)
+
+5) Quick Sort
+- Idea: pick a pivot, partition array into <pivot and >=pivot blocks, then sort partitions recursively.
+- Time: Average O(n log n), Worst O(n^2) (bad pivots)
+- Space: O(log n) average recursion stack (O(n) worst)
+- Stable: No (unless adapted)
+- In-place: Yes (typical Lomuto/Hoare partitions)
+- Use-case: General-purpose fast in-memory sorting; use randomized pivot or median-of-three to avoid worst-case
+- Pitfalls: Worst-case for already sorted inputs if pivot strategy is poor; recursion depth on huge arrays
+
+6) Heap Sort
+- Idea: build a heap (max-heap) and repeatedly extract the maximum into the array's end.
+- Time: O(n log n) all cases
+- Space: O(1)
+- Stable: No
+- In-place: Yes
+- Use-case: When guaranteed O(n log n) and O(1) extra space are required
+
+7) Counting Sort (non-comparison)
+- Idea: count occurrences of keys (integers) and compute positions; place items by counts.
+- Time: O(n + k) where k is key range size
+- Space: O(n + k)
+- Stable: Yes (if implemented to preserve order)
+- In-place: No
+- Use-case: Integers with small range; used by radix sort as a stable subroutine
+
+8) Radix Sort (non-comparison)
+- Idea: sort numbers by digits starting from least-significant or most-significant digit, using a stable sort per digit
+- Time: O(d * (n + k)) where d = number of digits, k = base (digit range)
+- Space: O(n + k)
+- Stable: Yes
+- In-place: No (typical implementations)
+- Use-case: Large arrays of integers or fixed-length strings where digit count is small relative to n
+
+9) Bucket Sort
+- Idea: distribute items into buckets, sort each bucket (often with insertion sort), concatenate buckets
+- Time: Average O(n + k), Worst O(n^2) depending on distribution
+- Space: O(n + k)
+- Stable: Depends on bucket sort and bucket sort's internal sort
+- Use-case: Uniformly distributed data over a range
+
+Quick Selection Guidance for Sorting
+- Small or nearly-sorted arrays: insertion sort.
+- Need stable sort for large data: merge sort or stable radix/counting when applicable.
+- Need in-place and usually fastest average: quick sort (with good pivot).
+- Need guaranteed O(n log n) in-place: heap sort.
+- Integers with small range: counting or radix sort.
+
+Common pitfalls across sorting
+- Off-by-one errors in loops
+- Choosing a poor pivot for quick sort
+- Stability concerns when duplicates matter
+- Memory usage for merge/radix on large data
+
+--------------------------------------------------------------------
+SEARCHING ALGORITHMS
+--------------------------------------------------------------------
+Purpose: locate an element (or property) in a collection. Key distinction: algorithms for unsorted data vs algorithms that require sorted data or specialized structures.
+
+1) Linear Search
+- Idea: scan each element sequentially
+- Time: O(n)
+- Space: O(1)
+- Use-case: small or unsorted arrays
+
+2) Binary Search
+- Idea: repeatedly halve search range on sorted array by comparing with mid element
+- Time: O(log n)
+- Space: O(1) iterative (O(log n) recursion if recursive)
+- Precondition: array must be sorted
+- Pitfalls: off-by-one errors; prefer mid = left + (right - left)/2 to avoid overflow
+
+3) Interpolation Search
+- Idea: estimate the position of the target based on key distribution (good for uniform distributions)
+- Time: Average O(log log n) for uniform data, Worst O(n)
+- Use-case: uniformly distributed numeric keys
+
+4) Jump Search and Block Search
+- Idea: jump by fixed block size (e.g., sqrt(n)), then linear search within block
+- Time: O(sqrt(n))
+- Use-case: sorted arrays where binary search isn't suitable or for specific memory access patterns
+
+5) Exponential Search
+- Idea: find range by doubling step sizes then perform binary search on found range
+- Time: O(log n)
+- Use-case: unbounded/infinite lists simulated by API or when value is near the start
+
+6) Hash-based Lookup (Hash table)
+- Idea: map keys to buckets using a hash function, store items for O(1) average lookup
+- Time: Average O(1), Worst O(n) depending on collisions
+- Space: O(n)
+- Use-case: dictionaries, sets, membership checks; best when order not required
+- Pitfalls: poor hash leads to collisions, load factor matters, open addressing vs chaining tradeoffs
+
+7) Binary Search Tree (BST), Balanced BST
+- Idea: tree-based ordered structure; search follows left/right decisions
+- Time: BST average O(log n), worst O(n) for degenerate tree. Balanced trees (AVL, Red-Black) guarantee O(log n)
+- Use-case: ordered set/map with dynamic inserts/deletes
+
+8) Trie (prefix tree)
+- Idea: tree keyed by characters; search by following characters
+- Time: O(L) where L = key length
+- Space: high (depends on alphabet and keys)
+- Use-case: prefix search, autocomplete, dictionary matching
+
+Choosing a search algorithm
+- Unsorted small data: linear search
+- Sorted static array: binary search
+- Fast membership with dynamic insert/delete: hash table (unordered_map/set)
+- Ordered dynamic data: balanced BST
+- Prefix/string operations: trie
+
+Common pitfalls
+- Wrong preconditions (e.g., binary search on unsorted array)
+- Off-by-one and mid calculations
+- Not handling duplicates consistently when returning index or range
+
+--------------------------------------------------------------------
+GRAPH ALGORITHMS
+--------------------------------------------------------------------
+Purpose: algorithms that operate on graphs (nodes/edges). Choose representation wisely: adjacency list for sparse graphs, adjacency matrix for dense graphs, edge list for algorithms that iterate edges.
+
+Basic concepts and notation
+- V = number of vertices, E = number of edges
+- Directed vs undirected, weighted vs unweighted
+
+1) Traversal / Exploration
+- BFS (Breadth-First Search)
+  - Idea: level order traversal using queue; explores nearest nodes first
+  - Time: O(V + E)
+  - Space: O(V)
+  - Use: shortest path by edge count in unweighted graph, connectivity, shortest number of steps
+
+- DFS (Depth-First Search)
+  - Idea: go deep using recursion/stack then backtrack
+  - Time: O(V + E)
+  - Space: O(V) recursion stack (could be O(V) worst-case depth)
+  - Use: cycle detection, topological sort, components
+
+2) Shortest Path Algorithms
+- Dijkstra
+  - Idea: greedy relaxation using a min-priority queue for non-negative weights
+  - Time: O((V + E) log V) with binary heap (or O(E + V log V))
+  - Use: single-source shortest path with non-negative weights
+  - Pitfalls: fails with negative edges
+
+- Bellman-Ford
+  - Idea: relax edges repeatedly (V-1 iterations) and detect negative cycles
+  - Time: O(V * E)
+  - Use: graphs with negative weights, detect negative cycles
+
+- A* Search
+  - Idea: best-first search guided by heuristic (f = g + h)
+  - Time: depends on heuristic quality; can be much faster than Dijkstra in practice
+  - Use: pathfinding in maps with admissible heuristic
+
+- Floyd-Warshall
+  - Idea: dynamic programming for all-pairs shortest paths
+  - Time: O(V^3)
+  - Space: O(V^2)
+  - Use: small dense graphs where all-pairs distances required
+
+3) Minimum Spanning Tree (MST)
+- Kruskal
+  - Idea: sort edges by weight; union components using DSU (union-find)
+  - Time: O(E log E) dominated by sorting edges
+  - Use: build MST for edge-centric data, forest if graph disconnected
+
+- Prim
+  - Idea: grow MST from a start node using a priority queue of candidate edges
+  - Time: O(E log V)
+  - Use: when graph is stored as adjacency list or dense graphs (with Fibonacci heap optimized)
+
+4) Connectivity and Components
+- Union-Find (Disjoint Set Union)
+  - Idea: maintain sets with union by rank and path compression
+  - Time: nearly O(1) per op (amortized inverse-Ackermann α(n))
+  - Use: Kruskal, dynamic connectivity queries
+
+- Strongly Connected Components (SCC)
+  - Kosaraju: two DFS passes (reverse edges) — O(V + E)
+  - Tarjan: single DFS using low-link values — O(V + E)
+  - Use: directed graphs decomposition into SCCs
+
+5) Topological Sort
+- Idea: order vertices so that for every edge u->v, u appears before v. Only possible for DAGs.
+- Implementations: DFS-based (post-order) or Kahn's algorithm (BFS using indegrees)
+- Time: O(V + E)
+- Use: scheduling, build systems, dependency resolution
+
+6) Cycle Detection
+- Directed graphs: DFS with visited + recursion stack / colors to detect back edges
+- Undirected graphs: DFS/BFS tracking parent node
+
+Quick selection guidance for graphs
+- Unweighted shortest path: BFS
+- Weighted non-negative: Dijkstra
+- Negative weights: Bellman-Ford
+- All-pairs small graphs: Floyd-Warshall
+- MST: Kruskal (edge-sorted) or Prim (adjacency)
+- SCC: Tarjan for single-pass efficiency, Kosaraju for clarity
+
+Common pitfalls in graph algorithms
+- Not marking visited nodes → infinite loops
+- Incorrect graph representation for algorithm (adjacency matrix vs list)
+- Using Dijkstra with negative weights
+- Stack overflow if DFS recursion is deep (use iterative stack for large graphs)
+
+--------------------------------------------------------------------
+CONTRACTS, EDGE CASES, AND PRACTICAL NOTES
+--------------------------------------------------------------------
+- Contracts (simple):
+  - binary_search(arr, n, key) -> index or -1 (precondition: arr sorted)
+  - merge_sort(arr, l, r) -> arr sorted in place (uses O(n) extra memory)
+  - dijkstra(graph, source) -> array of distances (precondition: non-negative edge weights)
+
+- Edge cases to consider in implementations:
+  - empty arrays (n = 0)
+  - single-element arrays
+  - arrays with many duplicates
+  - very large arrays (watch recursion depth and memory)
+  - negative weight edges for shortest path algorithms
+
+--------------------------------------------------------------------
+HOW TO CHOOSE (SHORT GUIDE)
+--------------------------------------------------------------------
+- Sorting: stable & predictable -> merge sort. Fast in-place average -> quick sort (with good pivot). Small or mostly-sorted arrays -> insertion sort. Integer keys with limited range -> counting/radix.
+- Searching: unsorted -> linear. Sorted static -> binary search. Dynamic key-value -> hash table. Ordered dynamic -> balanced BST.
+- Graphs: unweighted shortest -> BFS. Weighted non-negative -> Dijkstra. Negative weights -> Bellman-Ford. MST -> Kruskal/Prim.
+
+--------------------------------------------------------------------
+FURTHER READING & PRACTICE
+- CLRS (Cormen et al.) for formal proofs and deeper complexity analysis
+- Practice implementing each algorithm and testing on edge-case inputs
+- Compare empirical runtimes on realistic data and measure memory usage
+
+
+
+=======================
+TIME COMPLEXITIES:
+=======================
+
+QUICK SORT:
+  BEST: O(n log(n))
+  AVERAGE: O(n log(n))
+  WORST: O(n^2)
+
+HEAP SORT:
+  BEST: O(n log(n))
+  AVERAGE: O(n log(n))
+  WORST: O(n log(n))
+
+BUBBLE SORT:
+  BEST: O(n)
+  AVERAGE: O(n^2)
+  WORST: O(n^2)
+
+RADIX SORT:
+  BEST: O(nk)
+  AVERAGE: O(nk)
+  WORST: O(nk)
+
+SELECTION SORT:
+  BEST: O(n^2)
+  AVERAGE: O(n^2)
+  WORST: O(n^2)
+
+INSERTION SORT:
+  BEST: O(n)
+  AVERAGE: O(n^2)
+  WORST: O(n^2)
+
+BINARY SEARCH:
+  BEST: O(1)
+  AVERAGE O(log(n))
+  WORST: O(log(n))
+
+MERGE SORT:
+  BEST: O(n log(n))
+  AVERAGE: O(n log(n))
+  WORST: O(n log(n))
+
+INSERT AT HEAD OF LINKED LIST:
+  BEST: O(1)
+  AVERAGE: O(1)
+  WORST: O(1)
+
+
+
+
+
+
+
+

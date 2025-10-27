@@ -1,0 +1,245 @@
+Merge Sort Notes
+=================
+
+How Merge Sort Works (Explained Like You're 5):
+----------------------------------------------
+Imagine you have a pile of messy LEGO blocks with different sizes, and you want to line them up from smallest to biggest.
+
+Instead of trying to sort the whole pile at once (which is hard), you do this:
+
+1. Split the pile in half
+   - Keep cutting your pile into two smaller piles until each pile has just 1 block.
+   - A pile with 1 block is already sorted.
+
+2. Put the piles back together in order
+   - When you join two piles back together, you look at the smallest block on top of each pile and pick the smaller one first.
+   - Keep doing this until all the blocks from both piles are lined up in order.
+
+3. Keep merging
+   - You keep merging little piles into bigger piles until you have one big sorted pile again.
+
+------------------------------------------------
+
+Visual Example:
+---------------
+Array: [ 3, 15, 45, 9, 10 ]
+
+Step 1: Split → [ 3, 15, 45 ] and [ 9, 10 ]
+Step 2: Split again → [ 3, 15 ] [ 45 ] [ 9 ] [ 10 ]
+Step 3: Split again → [ 3 ] [ 15 ] [ 45 ] [ 9 ] [ 10 ]
+
+Now merge them back:
+- [ 3 ] + [ 15 ] → [ 3, 15 ]
+- [ 45 ] stays alone
+- [ 9 ] + [ 10 ] → [ 9, 10 ]
+
+Now merge bigger piles:
+- [ 3, 15 ] + [ 45 ] → [ 3, 15, 45 ]
+- [ 9, 10 ] stays alone
+
+Finally:
+- [ 3, 15, 45 ] + [ 9, 10 ] → [ 3, 9, 10, 15, 45 ]
+
+Sorted! 🎉
+
+------------------------------------------------
+
+Why It’s Smart:
+---------------
+- Instead of doing lots of shifting like Bubble Sort or Insertion Sort,
+  Merge Sort uses a "divide-and-conquer" trick:
+  - Break the problem into smaller pieces
+  - Solve the small pieces (easy!)
+  - Combine the answers back together
+
+------------------------------------------------
+
+Time Complexities of Merge Sort:
+--------------------------------
+| Case        | Time Complexity |
+|-------------|-----------------|
+| Best Case   | O(n log n)      |
+| Average     | O(n log n)      |
+| Worst Case  | O(n log n)      |
+| Space       | O(n)            |
+
+Why?
+- The array gets split in half over and over → about log n levels of splitting.
+- At each level, we merge all n elements.
+- So total = n * log n.
+
+
+================================================================================================
+================================================================================================
+
+
+Merge Sort – Full Notes
+=======================
+
+Line-by-Line Explanation
+------------------------
+
+#include <iostream>
+using namespace std;
+
+- This allows us to use input/output (cout) without writing std:: every time.
+
+
+void merge(int arr[], int left, int mid, int right)
+
+- Function to merge two sorted halves of the array into one sorted section.
+- arr[] is the array, left is the start, mid is the middle, right is the end.
+
+
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+- n1 is the size of the left half.
+- n2 is the size of the right half.
+
+
+    int L[n1], R[n2];
+
+- Create two temporary arrays L and R to store the left and right halves.
+
+
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+
+- Copy elements from arr into the left array (L).
+
+
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+
+- Copy elements from arr into the right array (R).
+
+
+    int i = 0, j = 0, k = left;
+
+- i = current index in L
+- j = current index in R
+- k = current index in arr where we write the sorted values.
+
+
+    while (i < n1 && j < n2)
+    {
+        if (L[i] <= R[j])
+            arr[k++] = L[i++];
+        else
+            arr[k++] = R[j++];
+    }
+
+- While both halves still have numbers left:
+  - Compare L[i] and R[j].
+  - Place the smaller one into arr[k].
+  - Move forward in whichever half we took from.
+
+
+    while (i < n1)
+        arr[k++] = L[i++];
+
+- If anything is left in the left half (L), copy it into arr.
+
+
+    while (j < n2)
+        arr[k++] = R[j++];
+
+- If anything is left in the right half (R), copy it into arr.
+
+------------------------------------------------------------
+
+void mergeSort(int arr[], int left, int right)
+{
+    if (left < right)
+    {
+        int mid = (left + right) / 2;
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+        merge(arr, left, mid, right);
+    }
+}
+
+- Recursive function that splits the array:
+  1. If left < right, it means there is more than 1 element.
+  2. Find the middle index.
+  3. Recursively sort the left half.
+  4. Recursively sort the right half.
+  5. Merge the two sorted halves back together.
+
+------------------------------------------------------------
+
+int main()
+{
+    int arr[] = {3, 15, 45, 9, 10};
+    int size = 5;
+
+    mergeSort(arr, 0, size - 1);
+
+    for (int i = 0; i < size; i++)
+        cout << arr[i] << " ";
+}
+
+- Main function:
+  - Creates an array.
+  - Calls mergeSort on the full array.
+  - Prints out the sorted array.
+
+------------------------------------------------------------
+
+Visual Walkthrough Example (arr = {3, 15, 45, 9, 10})
+------------------------------------------------------
+
+Step 1: mergeSort(arr, 0, 4)
+- mid = 2
+- Left half = [3, 15, 45]
+- Right half = [9, 10]
+
+Step 2: Sort left half [3, 15, 45]
+- mid = 1
+- Left = [3, 15]
+- Right = [45]
+
+Step 3: Sort [3, 15]
+- mid = 0
+- Left = [3]
+- Right = [15]
+- Merge → [3, 15]
+
+Step 4: Merge [3, 15] and [45]
+- Result = [3, 15, 45]
+
+Step 5: Sort right half [9, 10]
+- mid = 3
+- Left = [9]
+- Right = [10]
+- Merge → [9, 10]
+
+Step 6: Merge [3, 15, 45] and [9, 10]
+- Compare 3 vs 9 → pick 3
+- Compare 15 vs 9 → pick 9
+- Compare 15 vs 10 → pick 10
+- Compare 15 vs (nothing left in right) → pick 15
+- Pick 45 last
+- Result = [3, 9, 10, 15, 45]
+
+------------------------------------------------------------
+
+Final Sorted Array:
+[3, 9, 10, 15, 45]
+
+------------------------------------------------------------
+
+Time Complexities:
+------------------
+| Case        | Time Complexity |
+|-------------|-----------------|
+| Best Case   | O(n log n)      |
+| Average     | O(n log n)      |
+| Worst Case  | O(n log n)      |
+| Space       | O(n)            |
+
+Why?
+- Array is split in half repeatedly (log n levels).
+- At each level, we merge all n elements.
+- Total work = n * log n.

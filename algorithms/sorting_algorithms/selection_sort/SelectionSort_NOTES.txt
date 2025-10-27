@@ -1,0 +1,40 @@
+// TIME COMPLEXITY = O(n^2)
+
+Selection Sort is a simple comparison-based sorting algorithm. It divides the array into a sorted and an unsorted part, and repeatedly selects the smallest (or largest) element from the unsorted part and moves it to the end of the sorted part.
+
+Step-by-step explanation of selection sort:
+1. Start at the first element of the array.
+2. Find the smallest element in the unsorted part of the array.
+3. Swap this smallest element with the first unsorted element.
+4. Move the boundary of the sorted part one element to the right.
+5. Repeat steps 2-4 until the entire array is sorted.
+
+Example:
+Suppose arr = [64, 25, 12, 22, 11]
+- First pass: Find minimum (11), swap with 64 → [11, 25, 12, 22, 64]
+- Second pass: Find minimum (12), swap with 25 → [11, 12, 25, 22, 64]
+- Third pass: Find minimum (22), swap with 25 → [11, 12, 22, 25, 64]
+- Fourth pass: Find minimum (25), swap with 25 → [11, 12, 22, 25, 64]
+- Fifth pass: Only one element left, array is sorted.
+
+After all passes, the array is sorted.
+
+Selection sort is easy to understand and implement, but it is not efficient for large datasets. Its average and worst-case time complexity is O(n^2). It is not stable (equal elements may change relative order).
+
+Typical selection sort function:
+
+void selectionSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        int min_idx = i;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[min_idx]) {
+                min_idx = j;
+            }
+        }
+        int temp = arr[i];
+        arr[i] = arr[min_idx];
+        arr[min_idx] = temp;
+    }
+}
+
+This function sorts the array in place using the selection sort algorithm.

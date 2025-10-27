@@ -1,0 +1,25 @@
+TIME COMPLEXITY: BEST O(n log n), AVERAGE O(n log n), WORST O(n^2)
+
+Quick Sort is a fast, efficient, comparison-based sorting algorithm that uses the divide-and-conquer approach.
+
+How it works:
+1. Choose a 'pivot' element from the array.
+2. Partition the array so that all elements less than the pivot are on the left, and all elements greater than the pivot are on the right.
+3. Recursively apply quick sort to the left and right subarrays (excluding the pivot).
+4. The process repeats until the array is sorted.
+
+Key points:
+- The partitioning step is the heart of quick sort.
+- The choice of pivot affects performance. Common strategies: first element, last element, random element, or median.
+- Quick sort is usually faster than other O(n^2) algorithms (like bubble or selection sort) for large datasets.
+- It sorts in place (no extra arrays needed).
+- Quick sort is not stable (equal elements may change relative order).
+
+Example:
+Array: [8, 4, 2, 6]
+- Choose pivot (e.g., 6)
+- Partition: [4, 2] 6 [8]
+- Recursively sort [4, 2] and [8]
+- Merge: [2, 4, 6, 8]
+
+Quick sort is widely used in practice due to its speed and in-place sorting, but its worst-case time complexity can occur if the pivot choices are poor (e.g., always picking the smallest or largest element in a sorted array).
