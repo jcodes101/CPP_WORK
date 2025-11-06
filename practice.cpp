@@ -64,7 +64,7 @@ int main() {
   cout << "Tree 1" << endl;
   cout << "Tree 1, Root: " << tree_1->data << endl;
   cout << "Tree 1, Left Node: " << tree_1->left->data << endl;
-  cout << "Tree 1, Left Node: " << tree_1->right->data << endl;
+  cout << "Tree 1, Right Node: " << tree_1->right->data << endl;
 
   cout << "\n";
 
